@@ -17,7 +17,7 @@ crawl(Url,D) ->
 follow(0,KVs) ->
     KVs;
 follow(D,KVs) ->
-    follow(D-1, map_reduce:map_reduce_seq(fun map/2,fun reduce/2,KVs)).
+    follow(D-1, map_reduce_seq:map_reduce_seq(fun map/2,fun reduce/2,KVs)).
            
 map(Url,undefined) ->
     Body = fetch_url(Url),
@@ -27,19 +27,15 @@ map(Url,Body) ->
     
 reduce(Url,Bodies) ->
     case [B || B <- Bodies, B/=undefined] of
-         [] ->
-              [{Url,undefined}];
-         [Body] ->
-              [{Url,Body}]
+         [] -> [{Url,undefined}];
+         [Body] -> [{Url,Body}]
     end.
-fetch_url(Url) ->
 
+fetch_url(Url) ->
 io:format("Fetching ~tp~n",[Url]),
     case httpc:request(get,{Url,[]},[{timeout,5000}],[]) of
-          {ok,{_,_Headers,Body}}  ->
-              Body;
-          _ ->
-              ""
+          {ok,{_,_Headers,Body}} -> Body;
+          _ -> ""
     end.
     
 %% Find all the urls in an Html page with a given Url.
@@ -47,20 +43,14 @@ find_urls(Url,Html) ->
     Lower = string:to_lower(Html),
     %% Find all the complete URLs that occur anywhere in the page
     Absolute = case re:run(Lower,"http://.*?(?=\")",[global]) of
-                       {match,Locs} ->
-                           [lists:sublist(Html,Pos+1,Len)
-                              || [{Pos,Len}] <- Locs];
-                       _ ->
-                           []
+                       {match,Locs} -> [lists:sublist(Html,Pos+1,Len) || [{Pos,Len}] <- Locs];
+                       _ -> []
                end,
     %% Find links to files in the same directory, which need to be
     %% turned into complete URLs.
     Relative = case re:run(Lower,"href *= *\"(?!http:).*?(?=\")",[global]) of
-                       {match,RLocs} ->
-                           [lists:sublist(Html,Pos+1,Len)
-                              || [{Pos,Len}] <- RLocs];
-                       _ ->
-                           []
+                       {match,RLocs} -> [lists:sublist(Html,Pos+1,Len) || [{Pos,Len}] <- RLocs];
+                       _ -> []
                end,
     Rev = lists:reverse(Url),
     Cur = lists:takewhile(fun(Char)->Char/=$/ end,Rev),
@@ -74,4 +64,3 @@ find_urls(Url,Html) ->
                   lists:dropwhile(
                            fun(Char)->Char==$/ end, tl(lists:dropwhile(fun(Char)->Char/=$" end, R)))
               || R <- Relative].
-    
