@@ -12,11 +12,20 @@
 %% be started using inets:start().
 crawl(Url,D) ->
     Pages = follow(D,[{Url,undefined}]),
+    %below is debug line
+    %io:format("While D = 0, Pages = ~p~n", [Pages]),
+    %above is debug line
     [{U,Body} || {U,Body} <- Pages, Body /= undefined].
                       
 follow(0,KVs) ->
+    %below is debug line
+    %io:format("While D = 0, KVs = ~p~n", [KVs]),
+    %above is debug line
     KVs;
 follow(D,KVs) ->
+    %below is debug line
+    io:format("While D = 1, KVs = ~p~n", [KVs]),
+    %above is debug line
     follow(D-1, map_reduce_seq:map_reduce_seq(fun map/2,fun reduce/2,KVs)).
            
 map(Url,undefined) ->
@@ -43,14 +52,15 @@ find_urls(Url,Html) ->
     Lower = string:to_lower(Html),
     %% Find all the complete URLs that occur anywhere in the page
     Absolute = case re:run(Lower,"http://.*?(?=\")",[global]) of
-                       {match,Locs} -> [lists:sublist(Html,Pos+1,Len) || [{Pos,Len}] <- Locs];
-                       _ -> []
+		   {match,Locs} -> 
+		       [lists:sublist(Html,Pos+1,Len) || [{Pos,Len}] <- Locs];
+                   _ -> []
                end,
     %% Find links to files in the same directory, which need to be
     %% turned into complete URLs.
     Relative = case re:run(Lower,"href *= *\"(?!http:).*?(?=\")",[global]) of
-                       {match,RLocs} -> [lists:sublist(Html,Pos+1,Len) || [{Pos,Len}] <- RLocs];
-                       _ -> []
+		   {match,RLocs} -> [lists:sublist(Html,Pos+1,Len) || [{Pos,Len}] <- RLocs];
+                   _ -> []
                end,
     Rev = lists:reverse(Url),
     Cur = lists:takewhile(fun(Char)->Char/=$/ end,Rev),
@@ -60,7 +70,6 @@ find_urls(Url,Html) ->
              Cond -> lists:reverse(lists:dropwhile(fun(Char)->Char/=$/ end,Rev));
              true -> Url
            end,
-    Absolute ++ [Url0++"/"++
-                  lists:dropwhile(
-                           fun(Char)->Char==$/ end, tl(lists:dropwhile(fun(Char)->Char/=$" end, R)))
-              || R <- Relative].
+    Absolute ++ 
+    [Url0++"/"++
+    lists:dropwhile(fun(Char)->Char==$/ end, tl(lists:dropwhile(fun(Char)->Char/=$" end, R))) || R <- Relative].
