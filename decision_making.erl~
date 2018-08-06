@@ -1,0 +1,14 @@
+-module(decision_making).
+-export(decision_making_if/1).
+
+decision_making_if(GuardVar) ->
+    if 
+	GuardVar > 0 ->
+	    Guardvar,
+	    io:format("It is a positive value.~n");
+	GuardVar < 0 ->
+	    GuardVar,
+	    io:format("it is a negative value.~n");
+	GuardVar == 0 ->
+	    io:format("The value is 0.~n")
+    end.
