@@ -24,7 +24,7 @@ follow(0,KVs) ->
     KVs;
 follow(D,KVs) ->
     %below is debug line
-    io:format("While D = 1, KVs = ~p~n", [KVs]),
+    %io:format("While D = 1, KVs = ~p~n", [KVs]),
     %above is debug line
     follow(D-1, map_reduce_seq:map_reduce_seq(fun map/2,fun reduce/2,KVs)).
            

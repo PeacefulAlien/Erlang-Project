@@ -7,20 +7,20 @@
 
 file_output(List) ->
     A = lists:flatlength(List),
-    %dets:open_file(debug_file, [{file, "debug_file.dat"}]),
-    dets:open_file(web, [{file, "web.dat"}]),
+    dets:open_file(debug_file, [{file, "debug_file.dat"}]),
+    %dets:open_file(web, [{file, "web.dat"}]),
     if  A == 0 ->
 	    io:format("Invalid input!~nIt is an empty list.~n");
         A == 1 ->
-	    %io:format("2nd.~n"),
-	    %dets:insert(debug_file, lists:nth(1, List));
-	    dets:insert(web, lists:nth(1, List));
+	    io:format("2nd.~n"),
+	    dets:insert(debug_file, lists:nth(1, List));
+	    %dets:insert(web, lists:nth(1, List));
         A > 1 ->
-	    %io:format("3rd.~n"),
+	    io:format("3rd.~n"),
 	    [Head | Rest] = List,
-	    %dets:insert(debug_file, Head),
-	    dets:insert(web, Head),
+	    dets:insert(debug_file, Head),
+	    %dets:insert(web, Head),
 	    file_output(Rest)
     end,
-    %dets:close(debug_file).
-    dets:close(web).
+    dets:close(debug_file).
+    %dets:close(web).

@@ -15,7 +15,12 @@
 %% the result.
 
 map_reduce_seq(Map,Reduce,Input) ->
+    %below is debug line
+    %io:format("While D = 1, Map, Reduce & Input = ~p, ~p, ~p.~n", [Map, Reduce, Input]),
+    %Map & Reduce are functions crawl:map and crawl:reduce.
+    %above is debug line
     Mapped = [{K2,V2} || {K,V} <- Input, {K2,V2} <- Map(K,V)],
+    %K, V from "Input";K, V as input to the function crawl:Map to fetch & find urls
     reduce_seq(Reduce,Mapped).
     
 reduce_seq(Reduce,KVs) ->
