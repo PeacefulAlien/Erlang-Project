@@ -12,27 +12,30 @@
 %% be started using inets:start().
 crawl(Url,D) ->
     Pages = follow(D,[{Url,undefined}]),
-    %below is debug line
+    %%below is debug line
     %io:format("While D = 0, Pages = ~p~n", [Pages]),
     %above is debug line
     [{U,Body} || {U,Body} <- Pages, Body /= undefined].
                       
 follow(0,KVs) ->
-    %below is debug line
+    %%below is debug line
     %io:format("While D = 0, KVs = ~p~n", [KVs]),
-    %above is debug line
+    %%above is debug line
     KVs;
 follow(D,KVs) ->
-    %below is debug line
-    io:format("While D = 1, KVs = ~p~n", [KVs]),
-    %above is debug line
+    %%below is debug line
+    %io:format("While D = 1, KVs = ~p~n", [KVs]),
+    %%above is debug line
     follow(D-1, map_reduce_seq:map_reduce_seq(fun map/2,fun reduce/2,KVs)).
            
 map(Url,undefined) ->
     Body = fetch_url(Url),
     [{Url,Body}] ++ [{U,undefined} || U <- find_urls(Url,Body)];
+    %%fun find_urls/2 takes Url and the 'Body' from fun fetch_url/1, 
+    %%which is some numbers from https:request, as input.
 map(Url,Body) ->
     [{Url,Body}].
+    %%output of fun map/2 is a  list of key-value-pair tuples, Urls and numbers.
     
 reduce(Url,Bodies) ->
     case [B || B <- Bodies, B/=undefined] of
@@ -42,8 +45,8 @@ reduce(Url,Bodies) ->
 
 fetch_url(Url) ->
 io:format("Fetching ~tp~n",[Url]),
-    case httpc:request(get,{Url,[]},[{timeout,5000}],[]) of
-          {ok,{_,_Headers,Body}} -> Body;
+    case httpc:request(get,{Url,[]},[{timeout,5000}],[]) of  
+	{ok,{_,_Headers,Body}} -> Body;
           _ -> ""
     end.
     
