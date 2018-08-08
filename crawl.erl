@@ -23,9 +23,15 @@ follow(0,KVs) ->
     %%above is debug line
     KVs;
 follow(D,KVs) ->
+<<<<<<< HEAD
     %%below is debug line
     %io:format("While D = 1, KVs = ~p~n", [KVs]),
     %%above is debug line
+=======
+    %below is debug line
+    %io:format("While D = 1, KVs = ~p~n", [KVs]),
+    %above is debug line
+>>>>>>> Dell3510
     follow(D-1, map_reduce_seq:map_reduce_seq(fun map/2,fun reduce/2,KVs)).
            
 map(Url,undefined) ->

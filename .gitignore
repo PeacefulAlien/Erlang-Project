@@ -1,3 +1,8 @@
+<<<<<<< HEAD
 *.erl~
 *.beam
+=======
+*.beam
+*.erl~
+>>>>>>> Dell3510
 *.dat
