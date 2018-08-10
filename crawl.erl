@@ -37,11 +37,11 @@ follow(D,KVs) ->
 map(Url,undefined) ->
     Body = fetch_url(Url),
     [{Url,Body}] ++ [{U,undefined} || U <- find_urls(Url,Body)];
-    %%fun find_urls/2 takes Url and the 'Body' from fun fetch_url/1, 
+    %%fun find_urls/2 takes 'Url' and the 'Body' from fun fetch_url/1, 
     %%which is some numbers from https:request, as input.
 map(Url,Body) ->
     [{Url,Body}].
-    %%output of fun map/2 is a  list of key-value-pair tuples, Urls and numbers.
+    %%output of fun map/2 is a  list of key-value-pair tuples, 'Urls' and 'Body'.
     
 reduce(Url,Bodies) ->
     case [B || B <- Bodies, B/=undefined] of
@@ -52,7 +52,8 @@ reduce(Url,Bodies) ->
 fetch_url(Url) ->
 io:format("Fetching ~tp~n",[Url]),
     case httpc:request(get,{Url,[]},[{timeout,5000}],[]) of  
-	{ok,{_,_Headers,Body}} -> Body;
+	{ok,{_,_Headers,Body}} -> 
+	    Body;
           _ -> ""
     end.
     
