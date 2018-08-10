@@ -15,7 +15,7 @@
 %% the result.
 
 map_reduce_seq(Map,Reduce,Input) ->
-    %%'Map' and 'Reduce' are functions, 'Input' is a list of tuples.
+    %%'Map' and 'Reduce' are functions, 'Input'= 'KVs' in crawl.erl, is a list of tuples.
     Mapped = [{K2,V2} || {K,V} <- Input, {K2,V2} <- Map(K,V)],
     reduce_seq(Reduce,Mapped).
     

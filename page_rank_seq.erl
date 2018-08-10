@@ -24,6 +24,7 @@ page_rank_seq() ->
    %%map_reduce_seq/3 = map_reduce_seq(Map, Reduce, Input). 
    %%'Map' and 'Reduce' are functions, 'Input' is a list of tuples, 
    %%in this case, [{Url, ok} [{Url,ok} || Url <- Urls].
-   map_reduce_seq:map_reduce_seq(fun map/2, fun reduce/2, [{Url,ok} || Url <- Urls]),
-   dets:close(web, [{file, "web.dat"}].
+   map_reduce_seq:map_reduce_seq(fun map/2, fun reduce/2, [{Url,ok} || Url <- Urls]).
+   %dets:close(web).
+   %%Why the counting result is not printed if I close the web.dat file?
 
